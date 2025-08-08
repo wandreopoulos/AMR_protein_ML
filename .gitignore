@@ -1,0 +1,19 @@
+# VSCode and Python
+.vscode/
+__pycache__/
+*.py[cod]
+
+# Models and Data
+model/
+uploads/
+*.pt
+*.pkl
+*.h5
+*.joblib
+
+# OS
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+git add .
