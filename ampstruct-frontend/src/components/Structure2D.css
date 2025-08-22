@@ -1,32 +1,28 @@
 .structure2d-container {
-  margin: 40px auto;
-  padding: 20px;
-  max-width: 1000px;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #f8f9ff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.03);
 }
 
 .structure2d-title {
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.structure2d-sequence {
+  font-family: 'Courier New', monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.85rem;
   color: #333;
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.structure2d-subtext {
-  font-size: 16px;
-  color: #555;
-  margin-bottom: 20px;
-}
-
-.structure2d-image {
-  width: 100%;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  max-height: 450px;
-  object-fit: contain;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  max-height: 200px;
+  line-height: 1.5;
 }
