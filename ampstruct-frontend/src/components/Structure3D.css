@@ -1,0 +1,33 @@
+.structure3d-container {
+  margin: 40px auto;
+  padding: 20px;
+  max-width: 1000px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.structure3d-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.structure3d-subtext {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.structure3d-viewer {
+  width: 100%;
+  height: 500px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  background-color: #f9f9f9;
+  overflow: hidden;
+}

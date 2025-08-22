@@ -1,0 +1,50 @@
+/* src/components/Feature1.css */
+.feature1-container {
+  margin: 30px auto;
+  width: 80%;
+  background-color: #fefefe;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+.highlight-section {
+  margin-top: 20px;
+}
+
+.sequence-box {
+  background: #f5f5f5;
+  border-radius: 6px;
+  padding: 10px;
+  overflow-x: auto;
+  font-family: monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.6;
+}
+
+.aa {
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.hydrophobic {
+  background-color: #006400;
+  color: white;
+}
+
+.hydrophilic {
+  background-color: #add8e6;
+  color: black;
+}
+
+.polar {
+  background-color: #dda0dd;
+  color: black;
+}
+
+.non-polar {
+  background-color: #f0e68c;
+  color: black;
+}

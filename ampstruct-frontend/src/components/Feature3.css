@@ -1,0 +1,13 @@
+.feature3-container {
+  padding: 30px;
+  background-color: #f8f9ff;
+  border-radius: 8px;
+  margin: 40px auto;
+  width: 90%;
+}
+
+.feature3-desc {
+  font-style: italic;
+  color: #555;
+  margin-bottom: 20px;
+}
