@@ -1,0 +1,9 @@
+flask
+flask-cors
+gunicorn
+torch
+xgboost
+scikit-learn
+numpy
+pandas
+biopython
