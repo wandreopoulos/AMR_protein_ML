@@ -10,7 +10,7 @@ const FileUploader = ({ onFileUpload }) => {
     const formData = new FormData();
     formData.append("file", file);
 
-    fetch("https://ampstruct-frontend.onrender.com/predict", {
+    fetch("https://amr-protein-ml.onrender.com/predict", {
       method: "POST",
       body: formData
     })
