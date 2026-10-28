@@ -33,7 +33,7 @@ The downloaded notebook is `source/AMRNONAMR.ipynb`. Its actual pipeline is:
 Important integration facts:
 
 - The notebook’s trained model is LightGBM (`amr_lightgbm_model.pkl`), while the downloaded archive contains `model/amr_pipeline_xgb.pkl`. Do not assume these are interchangeable; identify the authoritative artifact before implementing inference.
-- The notebook loads ESM-2 through the fair-esm package, which can download/load the 650M model. The extracted `esm_embedding.py` instead expects a local `model/esm2_t33_650M_UR50D.pt`, which is not currently present in the workspace.
+- The notebook loads ESM-2 through the fair-esm package, which can download/load the 650M model. The local weights are now present at `source/krushna_ampstruct_assets/model/esm2_t33_650M_UR50D.pt` (approximately 2.6 GB). The extracted `esm_embedding.py` expects a model path relative to its own location, so verify that path before running it.
 - The notebook’s top feature-importance plot labels features as embedding dimensions (`F0`, `F1`, etc.). Those are not directly human-readable biological features, so a UI explanation layer will need a separate attribution strategy if it is meant to explain hydrophobicity, polarity, residues, or domains.
 - The notebook includes duplicate precision-recall plotting cells; treat this as exploratory notebook history rather than a production API contract.
 
