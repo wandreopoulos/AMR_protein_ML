@@ -10,7 +10,9 @@ const FileUploader = ({ onFileUpload }) => {
     const formData = new FormData();
     formData.append("file", file);
 
-    fetch("https://amr-protein-ml.onrender.com/predict", {
+    const apiUrl = process.env.REACT_APP_API_URL || "https://amr-protein-ml.onrender.com";
+
+    fetch(`${apiUrl}/predict`, {
       method: "POST",
       body: formData
     })

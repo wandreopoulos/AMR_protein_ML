@@ -67,11 +67,20 @@ The frontend’s upload component currently sends requests to the deployed backe
 https://amr-protein-ml.onrender.com/predict
 ```
 
-It does not yet use the local Flask server automatically. For local end-to-end testing, update `ampstruct-frontend/src/components/FileUploader.js` to use:
+It uses the deployed backend by default. For local end-to-end testing, set `REACT_APP_API_URL` when starting the frontend:
 
-```text
-http://localhost:5001/predict
+```bash
+REACT_APP_API_URL=http://localhost:5001 npm start
 ```
+
+In Windows PowerShell:
+
+```powershell
+$env:REACT_APP_API_URL = "http://localhost:5001"
+npm start
+```
+
+The frontend then submits to `http://localhost:5001/predict` without changing source code.
 
 The current backend `/predict` endpoint parses and validates the uploaded FASTA file and returns sequence records. It does not yet run the classifier or generate ESM-2 predictions. The frontend then renders the returned records through the result card, feature highlights, BioJS viewer, and structure panels.
 
