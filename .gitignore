@@ -12,10 +12,17 @@ source/
 *.pkl
 *.h5
 *.joblib
+*.npy
+*.ckpt
+*.safetensors
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
 
 # OS
 .DS_Store
 
 # Jupyter
 .ipynb_checkpoints/
-git add .
