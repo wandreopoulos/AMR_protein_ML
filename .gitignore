@@ -8,6 +8,7 @@ model/
 uploads/
 .venv/
 source/
+docs/
 *.pt
 *.pkl
 *.h5

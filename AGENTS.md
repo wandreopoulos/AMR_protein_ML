@@ -8,7 +8,7 @@ This workspace now contains the cloned AMPstruct application plus the project br
 
 Source reviewed:
 
-- `source/Krushna Thakkar web UI updates - API for finetuning w features - API for viz.md`
+- `docs/Krushna Thakkar web UI updates - API for finetuning w features - API for viz.md`
 
 Current team task list:
 
@@ -18,7 +18,7 @@ Read `TODO.md` alongside this file when planning project work. Keep durable proj
 
 ## Colab notebook findings
 
-The downloaded notebook is `source/AMRNONAMR.ipynb`. Its actual pipeline is:
+The downloaded notebook is `docs/AMRNONAMR.ipynb`. Its actual pipeline is:
 
 1. Mount Google Drive and load up to 6,500 AMR sequences, up to 6,500 non-AMR sequences, and one Q9H1E1 query sequence.
 2. Filter out sequences shorter than 30 amino acids.
