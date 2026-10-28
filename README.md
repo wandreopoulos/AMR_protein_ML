@@ -15,7 +15,7 @@ cd AMR_protein_ML
 
 ### Start the frontend
 
-Requirements: Node.js and npm.
+Requirements: Node.js and npm on macOS, Windows, or Linux.
 
 ```bash
 cd ampstruct-frontend
@@ -24,6 +24,14 @@ npm start
 ```
 
 The React app should open at `http://localhost:3000`.
+
+On Windows, run the same frontend commands from PowerShell:
+
+```powershell
+cd ampstruct-frontend
+npm install
+npm start
+```
 
 ### Start the backend
 
@@ -38,6 +46,18 @@ python app.py
 ```
 
 The Flask API listens on `http://localhost:5001`.
+
+On Windows PowerShell, use:
+
+```powershell
+cd ampstruct-backend
+py -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python app.py
+```
+
+If PowerShell blocks activation, use `python app.py` from an activated terminal, or configure the user-level execution policy according to your organization’s rules.
 
 ## Important current limitation
 
@@ -89,5 +109,7 @@ git pull --ff-only
 ```
 
 Make focused changes, test the frontend with `npm start`, and check the relevant loading, invalid-file, empty, and API-error states. Keep large datasets, model files, and downloaded project assets under `source/`; that folder is intentionally ignored by Git.
+
+The project should remain cross-platform. Prefer Node/npm scripts, Python standard-library path handling, environment variables, and documented shell alternatives over OS-specific commands or hardcoded paths. Test frontend behavior on both macOS and Windows when making changes to file upload, local API URLs, or process startup.
 
 Do not create a pull request until the team has reviewed the branch changes together.

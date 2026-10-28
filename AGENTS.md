@@ -160,6 +160,7 @@ The archive has been extracted to `source/krushna_ampstruct_assets/` and documen
 - Keep terminology consistent across title, labels, API responses, and documentation.
 - When changing visual styling, inspect both the full-page flow and long-sequence behavior. Dense residue chips can create wrapping and accessibility problems.
 - For every UI change, check loading, empty, invalid FASTA, multiple sequences, model/API failure, no-structure, and narrow viewport states.
+- Treat macOS and Windows as supported development environments. Avoid OS-specific paths and commands in application code; document both shell variants when setup instructions differ.
 
 ## Open questions
 
