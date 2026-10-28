@@ -16,6 +16,27 @@ Current team task list:
 
 Read `TODO.md` alongside this file when planning project work. Keep durable project context and working conventions here; keep active assignments and proposed tasks in `TODO.md`.
 
+## Colab notebook findings
+
+The downloaded notebook is `source/AMRNONAMR.ipynb`. Its actual pipeline is:
+
+1. Mount Google Drive and load up to 6,500 AMR sequences, up to 6,500 non-AMR sequences, and one Q9H1E1 query sequence.
+2. Filter out sequences shorter than 30 amino acids.
+3. Load `esm2_t33_650M_UR50D` through `esm.pretrained.load_model_and_alphabet`.
+4. Mean-pool the per-residue representation from layer 33 into one embedding per sequence.
+5. Save embeddings and labels as `all_embeddings.npy` and `all_labels.npy`; the query receives label `-1` and is excluded from classifier training.
+6. Run t-SNE with `n_components=2`, `perplexity=30`, and `random_state=42` for visualization.
+7. Split labeled data 80/20 with stratification and train `lgb.LGBMClassifier` using the documented hyperparameters.
+8. Evaluate with classification report, ROC AUC, confusion matrix, precision-recall curve, calibration curves, Brier scores, and 5-fold cross-validation.
+9. Save the trained notebook model as `amr_lightgbm_model.pkl`, along with predictions, probabilities, labels, and a text report.
+
+Important integration facts:
+
+- The notebook’s trained model is LightGBM (`amr_lightgbm_model.pkl`), while the downloaded archive contains `model/amr_pipeline_xgb.pkl`. Do not assume these are interchangeable; identify the authoritative artifact before implementing inference.
+- The notebook loads ESM-2 through the fair-esm package, which can download/load the 650M model. The extracted `esm_embedding.py` instead expects a local `model/esm2_t33_650M_UR50D.pt`, which is not currently present in the workspace.
+- The notebook’s top feature-importance plot labels features as embedding dimensions (`F0`, `F1`, etc.). Those are not directly human-readable biological features, so a UI explanation layer will need a separate attribution strategy if it is meant to explain hydrophobicity, polarity, residues, or domains.
+- The notebook includes duplicate precision-recall plotting cells; treat this as exploratory notebook history rather than a production API contract.
+
 ## Product and ML model
 
 - Input: FASTA file containing one or more peptide/protein sequences.
