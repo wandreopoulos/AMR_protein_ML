@@ -33,7 +33,7 @@ The downloaded notebook is `docs/AMRNONAMR.ipynb`. Its actual pipeline is:
 Important integration facts:
 
 - The notebook’s trained model is LightGBM (`amr_lightgbm_model.pkl`), while the downloaded archive contains `model/amr_pipeline_xgb.pkl`. Do not assume these are interchangeable; identify the authoritative artifact before implementing inference.
-- The notebook loads ESM-2 through the fair-esm package, which can download/load the 650M model. The local weights are now present at `source/krushna_ampstruct_assets/model/esm2_t33_650M_UR50D.pt` (approximately 2.6 GB). The extracted `esm_embedding.py` expects a model path relative to its own location, so verify that path before running it.
+- The notebook loads ESM-2 through the fair-esm package, which can download/load the 650M model. The local weights are now present at `source/model/esm2_t33_650M_UR50D.pt` (approximately 2.6 GB). The extracted `esm_embedding.py` expects a model path relative to its own location, so verify that path before running it.
 - The notebook’s top feature-importance plot labels features as embedding dimensions (`F0`, `F1`, etc.). Those are not directly human-readable biological features, so a UI explanation layer will need a separate attribution strategy if it is meant to explain hydrophobicity, polarity, residues, or domains.
 - The notebook includes duplicate precision-recall plotting cells; treat this as exploratory notebook history rather than a production API contract.
 
@@ -160,7 +160,7 @@ These links and paths were supplied by the team and should be treated as relevan
 - Web interface mockup/repository: `https://github.com/wandreopoulos/AMR_protein_ML/tree/krushna_thakkar_AMR_repo`
 - Google Drive dataset folder: `https://drive.google.com/drive/folders/1PIjmw0ZhhcFX0Cis-sJvN_sQAJlFzhR3`
 - Downloaded archive currently in this workspace: `source/drive-download-20261028T013335Z-1-002.zip`
-- Extracted working assets: `source/krushna_ampstruct_assets/`
+- Extracted working assets: `source/`
 
 The Colab notebook linked from the Google Doc used these Google Drive FASTA inputs:
 
@@ -171,7 +171,7 @@ query_path = "/content/drive/MyDrive/GeneCode/uniprotkb_accession_Q9H1E1_2025_08
 save_dir = "/content/drive/MyDrive/GeneCode/esm_embeddings"
 ```
 
-The archive has been extracted to `source/krushna_ampstruct_assets/` and documented in that folder’s `README.md`. It contains FASTA fixtures, `fasta_parser.py`, `esm_embedding.py`, a `Procfile`, and `model/amr_pipeline_xgb.pkl`. Preserve the original ZIP as the source artifact. Note that the extracted model appears to be XGBoost, which conflicts with the brief’s LightGBM description; verify before integrating.
+The archive has been extracted directly to `source/` and documented in `source/README.md`. It contains FASTA fixtures, `fasta_parser.py`, `esm_embedding.py`, a `Procfile`, and `model/amr_pipeline_xgb.pkl`. Preserve the original ZIP as the source artifact. Note that the extracted model appears to be XGBoost, which conflicts with the brief’s LightGBM description; verify before integrating.
 
 ## Working rules for future interface changes
 

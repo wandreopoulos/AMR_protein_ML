@@ -104,9 +104,9 @@ The current backend `/predict` endpoint parses and validates the uploaded FASTA 
 
 The local test assets are in the ignored `source/` folder, so they are not included in a fresh Git clone. If you have the workspace asset bundle, useful files include:
 
-- `source/krushna_ampstruct_assets/uniprotkb_accession_Q9H1E1_2025_08_15.fasta` — sequence shown in the original mockup.
-- `source/krushna_ampstruct_assets/testinf_file_amr.fasta` — AMR test sequence.
-- `source/krushna_ampstruct_assets/testing_file_non_amr.fasta` — non-AMR test sequence.
+- `source/uniprotkb_accession_Q9H1E1_2025_08_15.fasta` — sequence shown in the original mockup.
+- `source/testinf_file_amr.fasta` — AMR test sequence.
+- `source/testing_file_non_amr.fasta` — non-AMR test sequence.
 
 ## Collaboration workflow
 
