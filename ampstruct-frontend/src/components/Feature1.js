@@ -34,14 +34,13 @@ const Feature1 = ({ sequence }) => {
       <section className="highlight-section">
         <h3>Hydrophobicity</h3>
         <p>
-          Hydrophobicity refers to the tendency of molecules (or parts of molecules) to repel water. AMR proteins often:
+          Hydrophobicity describes how strongly amino acids tend to avoid water. It can help researchers inspect sequence patterns and possible membrane-associated regions.
         </p>
         <ul>
-          <li>Embed in membranes (e.g., efflux pumps) → Need hydrophobic transmembrane regions</li>
-          <li>Interact with small molecules like antibiotics → Specific hydrophobic pockets matter</li>
-          <li>Exhibit hydrophobic patterns that differ from random proteins</li>
+          <li>Hydrophobic residues often occur in membrane-spanning regions.</li>
+          <li>Hydrophobic patterns can also appear in buried regions of folded proteins.</li>
+          <li>This visualization describes the sequence; it does not determine AMR status by itself.</li>
         </ul>
-        <p><strong>✅ So: AMR proteins tend to have distinguishable hydrophobicity signatures.</strong></p>
         <div className="sequence-box">{colorizeSequence(sequence, 'hydrophobicity')}</div>
       </section>
 

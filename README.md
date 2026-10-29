@@ -82,7 +82,7 @@ npm start
 
 The frontend then submits to `http://localhost:5001/predict` without changing source code.
 
-The current backend `/predict` endpoint parses and validates the uploaded FASTA file and returns sequence records. It does not yet run the classifier or generate ESM-2 predictions. The frontend then renders the returned records through the result card, feature highlights, BioJS viewer, and structure panels.
+The backend `/predict` endpoint parses and validates FASTA records, then runs local ESM-2 embeddings through the downloaded StandardScaler/XGBoost pipeline for valid sequences. It requires the local weights under `source/model/` (or `ESM_MODEL_PATH` and `CLASSIFIER_MODEL_PATH`). Results are marked `experimental`: class labels provisionally follow the notebook, and scores are uncalibrated. The frontend currently renders sequence records and feature/structure panels; it does not yet display the new classification fields. See [TOVERIFY.md](TOVERIFY.md) for the tested dependency versions, native-crash diagnosis, and unresolved artifact provenance. The experiment uses one OpenMP thread and serializes inference within each API worker; restart the backend after updating.
 
 ## Where to work
 
