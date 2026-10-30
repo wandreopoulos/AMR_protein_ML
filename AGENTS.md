@@ -62,6 +62,7 @@ Observed sections, in order:
    - Polarity is shown in yellow/pink/purple-toned residue chips.
    - The page explains that hydrophobicity and polarity help reveal AMP sequence signatures.
 5. `Interactive Sequence Viewer (BioJS)`: a section intended for zooming/inspection and additional sequence-level structural detail. The screenshot shows a large mostly empty/light viewer area, so loading, empty, and error states need attention.
+   The implementation now uses the installed BioJS 0.1.9 package through `src/utils/biojsSequence.js`, with local validation, range selection, overlapping motif search, line-length/text-size controls, and independent qualitative hydrophobic and polar/charged tracks. Feature 2 does not perform inference or claim model attribution/structural-domain prediction.
 6. `Feature 3: Structure Prediction`: a pale blue panel with explanatory copy, a predicted secondary-structure string, and a `3D Structure Viewer`.
 7. 3D viewer: large black canvas with a colored ribbon model. This is the strongest visual focal point in the current screenshots.
 
@@ -139,7 +140,8 @@ AMPstruct/
 ├── ampstruct-backend/  # Flask API and experimental inference
 │   ├── utils/
 │   │   ├── esm_embedding.py  # lazy ESM-2 loading and layer-33 mean pooling
-│   │   └── fasta_parser.py  # FASTA parsing and amino acid validation
+│   │   ├── fasta_parser.py  # FASTA parsing and amino acid validation
+│   │   └── python_version.py
 │   ├── app.py  # FASTA upload endpoint and classifier
 │   ├── benchmark_public.py  # run the public diagnostic panel
 │   ├── download_public_references.py  # download annotated UniProt protein references
@@ -171,9 +173,10 @@ AMPstruct/
 │   │   │   ├── Structure2D.js  # current secondary-structure demo
 │   │   │   ├── Structure3D.css
 │   │   │   ├── Structure3D.js  # current fixed-PDB demo viewer
-│   │   │   ├── ViewerLifecycle.test.js
+│   │   │   ├── ViewerLifecycle.test.js  # BioJS and NGL lifecycle tests
 │   │   │   └── Widgets.js
 │   │   ├── utils/
+│   │   │   ├── biojsSequence.js  # isolated local adapter for legacy BioJS 0.1.9
 │   │   │   ├── exportResults.js  # delimited export of scores, metadata, warnings, and sequences
 │   │   │   ├── exportResults.test.js
 │   │   │   └── prediction.js  # shared prediction availability and score validation
@@ -190,6 +193,7 @@ AMPstruct/
 │   ├── Krushna Thakkar web UI updates - API for finetuning w features - API for viz.md
 │   └── Krushna Thakkar web UI updates - API for finetuning w features - API for viz.zip
 ├── scripts/  # repository maintenance tools
+│   ├── check_python_version.py
 │   ├── install_git_hooks.py
 │   ├── test_project_map.py
 │   └── update_project_map.py
@@ -221,6 +225,7 @@ AMPstruct/
 │   └── README.md
 ├── .gitignore
 ├── AGENTS.md  # project context and this generated navigation map
+├── environment.yml
 ├── README.md  # setup, local servers, and public benchmark commands
 ├── requirements.txt
 ├── TODO.md  # team priorities and assignments

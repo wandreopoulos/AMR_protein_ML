@@ -1,0 +1,8 @@
+name: ampstruct
+channels:
+  - conda-forge
+dependencies:
+  - python=3.14.7
+  - pip
+  - pip:
+      - -r ampstruct-backend/requirements.txt

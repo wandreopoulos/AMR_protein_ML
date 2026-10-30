@@ -1,31 +1,68 @@
 .feature2-container {
   padding: 30px;
-  background-color: #fafafa;
-  border-radius: 12px;
-  margin-top: 40px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  width: 90%;
+  box-sizing: border-box;
+  margin: 40px auto;
+  background-color: #f8f9ff;
+  border-radius: 8px;
   text-align: center;
 }
 
 .feature2-container h2 {
-  font-size: 1.75rem;
+  margin-top: 0;
   margin-bottom: 10px;
   color: #333;
 }
 
 .feature2-desc {
-  font-size: 1rem;
+  font-style: italic;
   color: #555;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .biojs-viewer {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
   font-family: monospace;
   background-color: #fff;
   border-radius: 8px;
   padding: 15px;
-  overflow-x: auto;
+  overflow: auto;
+  min-height: 90px;
+  text-align: left;
+}
+
+.feature2-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 18px 0 12px; text-align: left; }
+.feature2-controls label { display: inline-flex; align-items: center; gap: 5px; font-size: .9rem; }
+.feature2-controls input[type="number"] { width: 70px; }
+.feature2-controls input, .feature2-controls select, .feature2-controls button { min-height: 32px; }
+.feature2-controls button, .feature2-state button { border: 1px solid #9bb6cc; background: #f4f8fb; border-radius: 5px; padding: 5px 9px; cursor: pointer; }
+.feature2-controls button:focus-visible, .feature2-controls input:focus-visible, .feature2-controls select:focus-visible, .feature2-state button:focus-visible { outline: 3px solid #78aee0; outline-offset: 2px; }
+.feature2-legend { display: flex; flex-wrap: wrap; gap: 16px; color: #52606d; font-size: .85rem; text-align: left; margin-bottom: 10px; }
+.legend-swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: 4px; }
+.legend-swatch.hydrophobic { background: #52a878; }
+.legend-swatch.polar { background: #c88735; }
+.feature2-state { padding: 18px; background: #eef5fa; border-radius: 7px; color: #415466; }
+.feature2-state.error { background: #fff1ed; color: #8a321f; }
+.sequence-grid { overflow-x: auto; background: #fff; border-radius: 8px; padding: 16px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.sequence-block { --cell-width: 1.5rem; --label-width: 1.5rem; display: grid; grid-template-columns: repeat(var(--column-count), var(--cell-width)) var(--label-width); min-width: max-content; margin-bottom: 18px; }
+.sequence-column, .sequence-label-column { box-sizing: border-box; width: var(--cell-width); display: grid; grid-template-rows: 1.25rem 1.5rem .65rem .65rem; row-gap: 3px; align-items: center; justify-items: center; }
+.sequence-label-column { width: var(--label-width); order: -1; }
+.position-number { color: #697784; font-size: .65rem; font-variant-numeric: tabular-nums; line-height: 1; white-space: nowrap; }
+.residue { width: 100%; height: 1.5rem; display: grid; place-items: center; line-height: 1.5rem; }
+.selected-residue { background: #dbeafe; border-radius: 3px; }
+.sequence-label-column b { color: #697784; font: 600 .55rem system-ui, sans-serif; }
+.track-mark { display: block; width: calc(100% - 0.5rem); height: .65rem; margin: 0 .25rem; border-radius: 2px; }
+.hydrophobic-mark { background: #52a878; }
+.polar-mark { background: #c88735; }
+.aligned-property-map { margin-top: 12px; overflow: auto; background: #fff; padding: 12px 15px; border-radius: 8px; font-family: monospace; text-align: left; }
+.property-map-label { color: #52606d; font: 600 .85rem system-ui, sans-serif; margin-bottom: 8px; }
+.property-map-grid { display: grid; min-width: max-content; line-height: 1.35; }
+.property-track-row { display: grid; grid-template-columns: 100px 1fr; align-items: center; min-width: max-content; }
+.property-track-name { color: #52606d; font: 600 .75rem system-ui, sans-serif; }
+.property-residue, .property-mark { min-width: 1.1em; text-align: center; }
+.property-mark { height: .75em; margin: 2px 1px; border-radius: 2px; background: transparent; }
+.hydrophobic-mark { background: #52a878; }
+.polar-mark { background: #c88735; }
+@media (max-width: 640px) {
+  .feature2-container { width: calc(100% - 2rem); padding: 18px; }
+  .feature2-controls { align-items: flex-start; }
 }

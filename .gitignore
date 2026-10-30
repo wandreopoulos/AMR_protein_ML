@@ -23,6 +23,7 @@ docs/
 *.safetensors
 
 # Local configuration and secrets
+/temp.md
 .env
 .env.*
 !.env.example

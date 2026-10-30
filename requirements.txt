@@ -1,8 +1,1 @@
-flask
-flask-cors
-biopython
-scikit-learn
-joblib
-xgboost
-fair-esm
-joblib
+-r ampstruct-backend/requirements.txt

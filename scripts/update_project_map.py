@@ -31,6 +31,8 @@ NOTES = {
     'ampstruct-frontend/src/utils/prediction.js': 'shared prediction availability and score validation',
     'ampstruct-frontend/src/components/Feature1.js': 'sequence property highlights',
     'ampstruct-frontend/src/components/Feature2.js': 'BioJS sequence viewer',
+    'ampstruct-frontend/src/utils/biojsSequence.js': 'isolated local adapter for legacy BioJS 0.1.9',
+    'ampstruct-frontend/src/components/ViewerLifecycle.test.js': 'BioJS and NGL lifecycle tests',
     'ampstruct-frontend/src/components/Feature3.js': 'structure section',
     'ampstruct-frontend/src/components/Structure2D.js': 'current secondary-structure demo',
     'ampstruct-frontend/src/components/Structure3D.js': 'current fixed-PDB demo viewer',

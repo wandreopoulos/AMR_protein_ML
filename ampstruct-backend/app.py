@@ -1,3 +1,7 @@
+from utils.python_version import ensure_supported_python
+
+ensure_supported_python()
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os

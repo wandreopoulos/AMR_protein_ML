@@ -4,6 +4,10 @@ Existing raw records are reused so that rerunning preserves this snapshot.
 Use the EMBL-EBI Proteins API because the main UniProt endpoint was unavailable.
 """
 
+from utils.python_version import ensure_supported_python
+
+ensure_supported_python()
+
 import csv
 from datetime import datetime
 import hashlib

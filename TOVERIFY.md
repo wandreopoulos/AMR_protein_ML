@@ -96,6 +96,26 @@ documented LightGBM model. A separate inference service is not necessary for
 this serialized local experiment; deployment concurrency and runtime isolation
 need separate verification before production use.
 
+### Python 3.14 compatibility check — October 29, 2026
+
+The repository now pins Python 3.14.7 in `.python-version`. A clean arm64
+Python 3.14.7 environment installed the backend requirements and successfully
+imported the API, loaded ESM-2 and the experimental classifier, and classified
+`source/provided/testinf_file_amr.fasta` without a native crash. The result was
+class `0` with scores `0.7331340313` and `0.2668659687`, matching the verified
+Python 3.10.21 smoke result for that fixture.
+
+The pinned backend requirements use torch 2.15.0, fair-esm 2.0.0, NumPy 2.5.4,
+scikit-learn 1.9.1, XGBoost 3.4.1, and joblib 1.6.0. Both the preferred
+micromamba environment and the fallback `venv` install this same requirements
+file. Loading the serialized
+pipeline emitted scikit-learn and XGBoost version warnings because the artifact
+was serialized with older versions. Python 3.14 compatibility is therefore
+verified for this runtime path. The repository now pins the runtime versions,
+but the model artifact itself still carries older serialization metadata, so
+those warnings remain until the artifact is re-exported or its original
+dependency versions are restored.
+
 ### Reproduce the corrected path
 
 Activate the existing compatibility environment from the repository root:

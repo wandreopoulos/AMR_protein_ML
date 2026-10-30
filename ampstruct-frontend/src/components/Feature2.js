@@ -1,88 +1,21 @@
-import React, { useEffect, useRef } from "react";
+import React, { useMemo, useState } from "react";
 import "./Feature2.css";
 
-const Feature2 = ({ sequence }) => {
-  const containerRef = useRef();
+const HYDROPHOBIC = new Set(["A", "V", "I", "L", "M", "F", "W", "Y"]);
+const POLAR = new Set(["R", "N", "D", "Q", "E", "K", "S", "T", "H", "Y"]);
+export const buildAnnotations = (sequence, hydrophobic = true, polar = true) => [
+  hydrophobic && { name: "Hydrophobic", color: "#52a878", regions: [...sequence].reduce((a, x, i) => { if (HYDROPHOBIC.has(x)) a.push({ start: i + 1, end: i + 1 }); return a; }, []) },
+  polar && { name: "Polar / charged", color: "#c88735", regions: [...sequence].reduce((a, x, i) => { if (POLAR.has(x)) a.push({ start: i + 1, end: i + 1 }); return a; }, []) }
+].filter(Boolean);
 
-  // Generate annotation data from sequence
-  const generateAnnotations = (sequence) => {
-    const hydrophobic = new Set(['A', 'V', 'I', 'L', 'M', 'F', 'W', 'Y']);
-    const polar = new Set(['R', 'N', 'D', 'Q', 'E', 'K', 'S', 'T', 'H', 'Y']);
-
-    const annotations = [];
-
-    for (let i = 0; i < sequence.length; i++) {
-      const aa = sequence[i];
-      if (hydrophobic.has(aa)) {
-        annotations.push({
-          name: `Hydrophobic (${aa})`,
-          start: i + 1,
-          end: i + 1,
-          color: "#a8e6cf"
-        });
-      } else if (polar.has(aa)) {
-        annotations.push({
-          name: `Polar (${aa})`,
-          start: i + 1,
-          end: i + 1,
-          color: "#ffb6b9"
-        });
-      }
-    }
-
-    return annotations;
-  };
-
-  useEffect(() => {
-    const container = containerRef.current;
-    let cancelled = false;
-    let script;
-    const renderViewer = () => {
-      if (!cancelled && window.Sequence && container && sequence) {
-        container.innerHTML = ""; // Clear previous content
-
-        const annotations = generateAnnotations(sequence);
-
-        new window.Sequence({
-          sequence,
-          target: container,
-          format: "FASTA",
-          id: "biojs-seq",
-          toolbar: true,
-          zoom: true,
-          badge: false,
-          search: true,
-          annotations,
-        });
-      }
-    };
-
-    if (!window.Sequence) {
-      script = document.createElement("script");
-      script.src =
-        "https://cdn.jsdelivr.net/npm/biojs-vis-sequence@0.1.23/build/biojs-vis-sequence.min.js";
-      script.async = true;
-      script.onload = renderViewer;
-      document.body.appendChild(script);
-    } else {
-      renderViewer();
-    }
-    return () => {
-      cancelled = true;
-      script?.remove();
-      if (container) container.innerHTML = '';
-    };
-  }, [sequence]);
-
-  return (
-    <div className="feature2-container">
-      <h2>🧬 Interactive Sequence Viewer (BioJS)</h2>
-      <p className="feature2-desc">
-        Explore amino acids, zoom in, or inspect potential structural domains.
-      </p>
-      <div ref={containerRef} className="biojs-viewer"></div>
-    </div>
-  );
-};
-
-export default Feature2;
+export default function Feature2({ sequence }) {
+  const normalized = (sequence || "").replace(/\s/g, "").toUpperCase();
+  const valid = normalized.length > 0 && /^[ACDEFGHIKLMNPQRSTVWY]+$/.test(normalized);
+  const [cols, setCols] = useState(40); const [size, setSize] = useState(16); const [start, setStart] = useState(1); const [end, setEnd] = useState(Math.max(1, normalized.length));
+  const [motif, setMotif] = useState(""); const [match, setMatch] = useState(0); const [hydrophobic, setHydrophobic] = useState(true); const [polar, setPolar] = useState(true);
+  const matches = useMemo(() => { const out = []; let from = 0; const needle = motif.toUpperCase(); while (needle) { const at = normalized.indexOf(needle, from); if (at < 0) break; out.push(at + 1); from = at + 1; } return out; }, [motif, normalized]);
+  const select = (s, e) => { const a = Math.max(1, Math.min(Number(s) || 1, normalized.length)); const b = Math.max(a, Math.min(Number(e) || a, normalized.length)); setStart(a); setEnd(b); };
+  const moveMatch = (direction) => { if (!matches.length) return; const next = (match + direction + matches.length) % matches.length; setMatch(next); select(matches[next], matches[next] + motif.length - 1); };
+  const chunks = []; for (let i = 0; i < normalized.length; i += cols) chunks.push(normalized.slice(i, i + cols));
+  return <section className="feature2-container" aria-labelledby="feature2-title"><h2 id="feature2-title">🧬 Feature 2: Interactive Sequence Viewer</h2><p className="feature2-desc">Inspect amino-acid positions and qualitative sequence properties. These tracks do not predict domains, structures, or explain the classifier decision.</p>{!valid && <div className="feature2-state" role="status">{normalized ? "This record contains unsupported amino-acid characters." : "Select a valid protein sequence to open the viewer."}</div>}{valid && <><div className="feature2-controls" aria-label="Sequence viewer controls"><label>Start <input type="number" min="1" max={normalized.length} value={start} onChange={e => select(e.target.value, end)} /></label><label>End <input type="number" min="1" max={normalized.length} value={end} onChange={e => select(start, e.target.value)} /></label><button type="button" onClick={() => select(1, normalized.length)}>Select all</button><label>Residues/line <select value={cols} onChange={e => setCols(Number(e.target.value))}><option value="20">20</option><option value="40">40</option><option value="60">60</option></select></label><label>Text size <input aria-label="Text size" type="range" min="12" max="24" value={size} onChange={e => setSize(Number(e.target.value))} /></label><label><input type="checkbox" checked={hydrophobic} onChange={e => setHydrophobic(e.target.checked)} /> Hydrophobic</label><label><input type="checkbox" checked={polar} onChange={e => setPolar(e.target.checked)} /> Polar/charged</label><label>Find motif <input value={motif} onChange={e => { setMotif(e.target.value.replace(/[^A-Za-z]/g, "")); setMatch(0); }} /></label><span>{motif && `${matches.length} match${matches.length === 1 ? "" : "es"}`}</span><button type="button" disabled={!matches.length} onClick={() => moveMatch(-1)}>Previous</button><button type="button" disabled={!matches.length} onClick={() => moveMatch(1)}>Next</button></div><div className="feature2-legend"><span><i className="legend-swatch hydrophobic" /> Hydrophobic</span><span><i className="legend-swatch polar" /> Polar/charged</span><span>Positions are 1-based amino-acid indexes.</span></div><div className="sequence-grid" style={{ fontSize: `${size}px` }} aria-label="Aligned amino-acid sequence viewer">{chunks.map((chunk, row) => <div className="sequence-block" key={row} style={{ "--column-count": chunk.length }}>{[...chunk].map((aa, i) => { const position = row * cols + i + 1; const showPosition = position === 1 || position % 5 === 0; return <div className="sequence-column" key={position} aria-label={`${aa} at position ${position}`}><span className="position-number">{showPosition ? position : ""}</span><span className={position >= start && position <= end ? "residue selected-residue" : "residue"}>{aa}</span><span className={hydrophobic && HYDROPHOBIC.has(aa) ? "track-mark hydrophobic-mark" : "track-mark"} aria-hidden="true" /><span className={polar && POLAR.has(aa) ? "track-mark polar-mark" : "track-mark"} aria-hidden="true" /></div>; })}<div className="sequence-label-column" aria-hidden="true"><span className="position-number" /><span className="residue" /><b>H</b><b>P</b></div></div>)}</div></>}</section>;
+}

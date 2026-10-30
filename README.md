@@ -13,6 +13,23 @@ git clone --branch ui-improvements https://github.com/wandreopoulos/AMR_protein_
 cd AMR_protein_ML
 ```
 
+### Quick start
+
+For Windows (PowerShell):
+
+```powershell
+if (-not (Get-Command node -ErrorAction SilentlyContinue)) { winget install --id OpenJS.NodeJS.LTS --exact --accept-source-agreements --accept-package-agreements; $env:Path += ";$env:ProgramFiles\nodejs" }; Set-Location ampstruct-frontend; npm install; $env:HOST = "localhost"; npm start
+```
+
+For macOS/Linux:
+
+```bash
+(command -v node >/dev/null 2>&1 || brew install node) && cd ampstruct-frontend && npm install && HOST=localhost npm start
+```
+
+If Node.js, Homebrew, or `winget` is unavailable, install Node.js LTS once
+from [nodejs.org](https://nodejs.org/). Then open <http://localhost:3000>.
+
 ### Start the frontend
 
 Requirements: Node.js and npm on macOS, Windows, or Linux.
@@ -35,29 +52,71 @@ npm start
 
 ### Start the backend
 
-Open a second terminal at the repository root:
+AMPstruct is verified against Python **3.14.7**. The repository pins this exact
+version in `.python-version`; use that interpreter for the backend and utility
+scripts. The backend exits early with a clear error if another Python version is
+used.
+
+Micromamba is the preferred environment manager because it provides a consistent,
+isolated environment across macOS, Windows, and Linux. From the repository root,
+create and activate the pinned environment:
 
 ```bash
-cd ampstruct-backend
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python app.py
+micromamba create -f environment.yml
+micromamba activate ampstruct
+python scripts/check_python_version.py
+python ampstruct-backend/app.py
+```
+
+If your shell is not configured for activation, use the equivalent form:
+
+```bash
+micromamba run -n ampstruct python scripts/check_python_version.py
+micromamba run -n ampstruct python ampstruct-backend/app.py
 ```
 
 The Flask API listens on `http://localhost:5001`.
 
-On Windows PowerShell, use:
+On Windows PowerShell, run the same commands from the repository root:
 
 ```powershell
+micromamba create -f environment.yml
+micromamba activate ampstruct
+python scripts/check_python_version.py
+python ampstruct-backend\app.py
+```
+
+If the version check reports anything other than 3.14.7, recreate the
+environment from `environment.yml`. If activation is unavailable, use
+`micromamba run -n ampstruct ...` instead.
+
+#### Fallback: Python `venv`
+
+Use this path when micromamba is unavailable. It installs the same pinned
+requirements from `ampstruct-backend/requirements.txt`:
+
+```bash
 cd ampstruct-backend
-py -m venv .venv
-.venv\Scripts\Activate.ps1
+python3.14 -m venv .venv
+source .venv/bin/activate
+python ../scripts/check_python_version.py
 python -m pip install -r requirements.txt
 python app.py
 ```
 
-If PowerShell blocks activation, use `python app.py` from an activated terminal, or configure the user-level execution policy according to your organization’s rules.
+On Windows PowerShell:
+
+```powershell
+cd ampstruct-backend
+py -3.14 -m venv .venv
+.venv\Scripts\Activate.ps1
+python ..\scripts\check_python_version.py
+python -m pip install -r requirements.txt
+python app.py
+```
+
+Do not mix packages between the micromamba environment and the fallback
+`.venv`; use one environment per checkout.
 
 ## Important current limitation
 
@@ -154,6 +213,10 @@ python ampstruct-backend/benchmark_public.py
 Results are written to `source/public/benchmark_results.csv` and `source/public/benchmark_summary.json`. The class mapping remains provisional; the script does not tune the mapping or classifier to these examples. Restart the backend after the asset reorganization. Update any custom `ESM_MODEL_PATH` or `CLASSIFIER_MODEL_PATH` values that still point to `source/model/`.
 
 ## Collaboration workflow
+
+### Feature 2 sequence viewer
+
+The interactive sequence viewer uses the installed `biojs-vis-sequence` 0.1.9 package through a local adapter; it does not load a runtime CDN or perform model inference. It validates protein input, renders BioJS residue positions, supports range selection, motif navigation, line-length/text-size controls, and independent hydrophobic and polar/charged annotation tracks. Empty, invalid, loading, timeout, and initialization-error states are shown explicitly. These qualitative tracks are not classifier attributions or predicted structural domains.
 
 Enable automatic maintenance of the project map in `AGENTS.md` once per clone:
 
