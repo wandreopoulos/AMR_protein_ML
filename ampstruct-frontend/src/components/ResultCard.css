@@ -1,4 +1,5 @@
 .result-card {
+  box-sizing: border-box;
   background: #f9f9f9;
   padding: 20px;
   border-radius: 12px;
@@ -6,14 +7,15 @@
   width: 90%;
   max-width: 800px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s ease-in-out;
   font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
 }
 
-.result-card:hover {
-  transform: scale(1.01);
+.result-sequence-id {
+  margin: 0 0 16px;
+  font-size: 18px;
+  overflow-wrap: anywhere;
 }
 
 .result-card p {
@@ -26,7 +28,88 @@
   color: #000;
 }
 
+.prediction-summary {
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.prediction-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  justify-content: space-between;
+}
+
+.prediction-heading h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.prediction-status {
+  background: #fef3c7;
+  color: #78350f;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.result-card .prediction-label {
+  margin: 12px 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e3a5f;
+  overflow-wrap: anywhere;
+}
+
+.result-metadata {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 20px;
+  margin: 16px 0;
+}
+
+.result-metadata dt {
+  font-size: 14px;
+  color: #475569;
+  margin-bottom: 4px;
+}
+
+.result-metadata dd {
+  margin: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.result-model {
+  grid-column: 1 / -1;
+}
+
+.result-card .prediction-score-note,
+.result-card .validation-note {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #475569;
+}
+
+.result-card .prediction-warning {
+  background: #fffbeb;
+  border-left: 3px solid #b45309;
+  padding: 12px;
+  color: #78350f;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.prediction-unavailable {
+  font-weight: 700;
+}
+
 .sequence-preview {
+  margin-top: 8px;
   word-break: break-word;
   background: #ffffff;
   padding: 10px;
@@ -34,4 +117,14 @@
   border-radius: 6px;
   font-family: 'Courier New', monospace;
   font-size: 13.5px;
+}
+
+@media (max-width: 520px) {
+  .result-card {
+    padding: 12px;
+  }
+
+  .result-metadata {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

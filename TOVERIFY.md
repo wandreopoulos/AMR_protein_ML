@@ -7,6 +7,12 @@ runtime execution only; the XGBoost artifact is still experimental. Valid
 sequences use ESM-2 layer-33 mean pooling (1280 features), then the fitted
 StandardScaler and XGBClassifier.
 
+**Accuracy is unverified; current predictions may be incorrect.** The stable
+runtime checks below do not demonstrate classification accuracy. The result
+cards now display this warning alongside provisional labels, raw class-1
+scores, and model metadata. Confirm the artifact's label mapping and evaluate
+on independently labeled protein fixtures before treating results as reliable.
+
 ### Native crash diagnosis
 
 - Reproduced the original failure in a fresh Python 3.10 process: SIGSEGV
