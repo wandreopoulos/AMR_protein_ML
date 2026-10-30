@@ -34,15 +34,18 @@ const Feature2 = ({ sequence }) => {
   };
 
   useEffect(() => {
+    const container = containerRef.current;
+    let cancelled = false;
+    let script;
     const renderViewer = () => {
-      if (window.Sequence && containerRef.current && sequence) {
-        containerRef.current.innerHTML = ""; // Clear previous content
+      if (!cancelled && window.Sequence && container && sequence) {
+        container.innerHTML = ""; // Clear previous content
 
         const annotations = generateAnnotations(sequence);
 
         new window.Sequence({
           sequence,
-          target: containerRef.current,
+          target: container,
           format: "FASTA",
           id: "biojs-seq",
           toolbar: true,
@@ -55,7 +58,7 @@ const Feature2 = ({ sequence }) => {
     };
 
     if (!window.Sequence) {
-      const script = document.createElement("script");
+      script = document.createElement("script");
       script.src =
         "https://cdn.jsdelivr.net/npm/biojs-vis-sequence@0.1.23/build/biojs-vis-sequence.min.js";
       script.async = true;
@@ -64,6 +67,11 @@ const Feature2 = ({ sequence }) => {
     } else {
       renderViewer();
     }
+    return () => {
+      cancelled = true;
+      script?.remove();
+      if (container) container.innerHTML = '';
+    };
   }, [sequence]);
 
   return (

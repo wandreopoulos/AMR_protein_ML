@@ -2,40 +2,40 @@ import React, { useState } from "react";
 import Header from "./components/Header";
 import FileUploader from "./components/FileUploader";
 import ResultCard from "./components/ResultCard";
+import ResultsToolbar from "./components/ResultsToolbar";
 
 import Feature1 from "./components/Feature1";
 import Feature2 from "./components/Feature2";
 import Feature3 from "./components/Feature3";
 function App() {
   const [results, setResults] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const selected = results[selectedIndex];
+  const handleResults = nextResults => {
+    setResults(nextResults);
+    setSelectedIndex(0);
+  };
 
   return (
     <div className="App" style={{ fontFamily: "Arial, sans-serif" }}>
       <Header />
-      <FileUploader onFileUpload={setResults} />
+      <FileUploader onFileUpload={handleResults} />
 
       {Array.isArray(results) && results.length > 0 && (
         <>
-          <h2 style={{ textAlign: "center", marginTop: "40px" }}>
-            FASTA File Sequences
-          </h2>
-          {results.map((item, idx) => {
-            const cleanedSequence = item.sequence
-              .split("\n")
-              .filter(line => !line.startsWith(">"))
-              .join("")
-              .trim();
-
-            return (
-              <div key={idx}>
-                <ResultCard item={item} />
-                <Feature1 sequence={cleanedSequence} />
-                <Feature2 sequence={cleanedSequence} />
-                <Feature3 sequence={cleanedSequence} />
-                {/* <Widgets probability={item.valid ? 1 : 0} /> */}
-              </div>
-            );
-          })}
+          <ResultsToolbar results={results} selectedIndex={selectedIndex} onSelect={setSelectedIndex} />
+          {selected && (
+            <>
+              <ResultCard item={selected} />
+              {selected.valid && (
+                <>
+                  <Feature1 sequence={selected.sequence} />
+                  <Feature2 sequence={selected.sequence} />
+                  <Feature3 sequence={selected.sequence} />
+                </>
+              )}
+            </>
+          )}
         </>
       )}
     </div>

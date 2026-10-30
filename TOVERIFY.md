@@ -2,6 +2,11 @@
 
 ## Verification outcome — October 29, 2026
 
+**Current runtime decision: keep `OMP_NUM_THREADS=1` and XGBoost `n_jobs=1`.**
+Subsequent isolated two-thread tests hung during XGBoost deserialization;
+changing initialization order produced SIGSEGV. The backend configuration was
+never changed during these experiments. See the thread-count follow-up below.
+
 The controlled experiment works locally with one OpenMP thread. This verifies
 runtime execution only; the XGBoost artifact is still experimental. Valid
 sequences use ESM-2 layer-33 mean pooling (1280 features), then the fitted
@@ -136,3 +141,37 @@ and inference with `python ampstruct-backend/benchmark_public.py` from the root.
 See `source/public/README.md`, `manifest.csv`, `benchmark_results.csv`, and
 `benchmark_summary.json`. Restart the backend after the relocation, and update
 any custom model-path environment variables that still use the old paths.
+
+## Thread-count follow-up — October 29, 2026
+
+The user chose to retain one thread after isolated experiments with copied
+backend modules. The running application files were not modified:
+
+- Four threads: no prediction completed before the 120-second timeout. Further
+  four-thread work was explicitly stopped at the user's request.
+- Two threads, existing initialization order: timed out after 60 seconds.
+  Faulthandler located the hang in `xgboost.core.Booster.__setstate__` during
+  `joblib.load`, after ESM embedding generation.
+- Two threads, classifier loaded before embedding generation: SIGSEGV
+  (return code `-11`) in the same deserialization path after approximately
+  1.7 seconds. Reordering initialization did not resolve the native conflict.
+
+Keep the verified single-thread configuration. Logs and outcomes are under
+ignored `source/verification/four_threads/`, `two_threads/`, and
+`two_threads_classifier_first/`. Higher thread counts are not verified and
+should not be exposed as an upload parameter. These runtime experiments do
+not change the model's accuracy or label-validation status.
+
+## CSV/TSV and sequence selection — October 29, 2026
+
+The frontend now displays one selected sequence's details and viewers, with
+CSV/TSV downloads for all records or the selected original record number.
+Exports retain full-precision scores, verification flags, and accuracy notes;
+invalid or unavailable predictions have blank prediction fields.
+
+All 40 frontend tests passed, including selection with duplicate IDs, invalid
+records, new uploads and request failures, export scope, delimited-field
+escaping, formula-like IDs, browser download cleanup, and delayed viewer
+callbacks. The production build passed. External viewer providers were mocked
+in these tests; this does not verify their live availability or establish
+sequence-specific structure prediction. The backend remains at one thread.

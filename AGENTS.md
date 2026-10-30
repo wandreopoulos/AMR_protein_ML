@@ -165,13 +165,21 @@ AMPstruct/
 │   │   │   ├── ResultCard.css
 │   │   │   ├── ResultCard.js  # provisional predictions, scores, and accuracy warnings
 │   │   │   ├── ResultCard.test.js
+│   │   │   ├── ResultsToolbar.css
+│   │   │   ├── ResultsToolbar.js  # sequence selection and CSV/TSV download controls
 │   │   │   ├── Structure2D.css
 │   │   │   ├── Structure2D.js  # current secondary-structure demo
 │   │   │   ├── Structure3D.css
 │   │   │   ├── Structure3D.js  # current fixed-PDB demo viewer
+│   │   │   ├── ViewerLifecycle.test.js
 │   │   │   └── Widgets.js
+│   │   ├── utils/
+│   │   │   ├── exportResults.js  # delimited export of scores, metadata, warnings, and sequences
+│   │   │   ├── exportResults.test.js
+│   │   │   └── prediction.js  # shared prediction availability and score validation
 │   │   ├── App.css
-│   │   ├── App.js  # page composition and per-sequence panels
+│   │   ├── App.js  # upload flow and selected-sequence detail panels
+│   │   ├── App.test.js
 │   │   ├── index.css
 │   │   └── index.js
 │   ├── .gitignore
@@ -271,6 +279,9 @@ Public pilot fixtures are downloaded with `python ampstruct-backend/download_pub
 
 ## Working rules for future interface changes
 
+- Keep the current backend at `OMP_NUM_THREADS=1` and XGBoost `n_jobs=1`. Isolated two-thread experiments hung or segfaulted; four threads timed out. The user chose to retain one thread. See `TOVERIFY.md` before revisiting runtime parallelism.
+- The sequence selector uses original record positions so duplicate FASTA IDs stay distinct. Render visualization panels only for the selected valid record, and clean up delayed callbacks/viewers when selection or uploads remove them.
+- CSV/TSV exports support all records or the selected record. Preserve raw score precision, experimental warnings, and verification flags; unavailable/invalid predictions must remain blank. Keep export eligibility consistent with result-card eligibility through `src/utils/prediction.js`.
 - Preserve the scientific workflow, but optimize for progressive disclosure: result first, explanation second, deep visualization third.
 - Keep prediction state and visualization state explicit; a viewer should never look like it is loaded when it is empty or stale.
 - Prefer reusable components for upload/status, sequence metadata, result summary, residue legend, visualization panels, and export actions.

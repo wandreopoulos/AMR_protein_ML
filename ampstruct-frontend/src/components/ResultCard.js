@@ -1,13 +1,10 @@
 import React from 'react';
 import './ResultCard.css';
+import { hasPrediction as hasModelPrediction, classOneScore } from '../utils/prediction';
 
 const ResultCard = ({ item }) => {
-  const hasPrediction = item.valid &&
-    ['experimental', 'predicted'].includes(item.status) &&
-    Number.isInteger(item.class_id) &&
-    typeof item.label === 'string' && item.label.trim().length > 0;
-  const hasScore = item.score_class_id === 1 &&
-    Number.isFinite(item.score) && item.score >= 0 && item.score <= 1;
+  const hasPrediction = hasModelPrediction(item);
+  const hasScore = classOneScore(item) !== null;
   const provisional = item.label_mapping_verified !== true;
 
   return (

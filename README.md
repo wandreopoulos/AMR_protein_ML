@@ -89,6 +89,8 @@ The backend `/predict` endpoint parses and validates FASTA records, then runs lo
 - `ampstruct-frontend/src/App.js` — page composition and result flow.
 - `ampstruct-frontend/src/components/FileUploader.js` — upload and API request.
 - `ampstruct-frontend/src/components/ResultCard.js` — sequence metadata/result card.
+- `ampstruct-frontend/src/components/ResultsToolbar.js` — sequence selector and CSV/TSV downloads.
+- `ampstruct-frontend/src/utils/exportResults.js` — export columns, escaping, and browser downloads.
 - `ampstruct-frontend/src/components/Feature1.js` — hydrophobicity and polarity highlights.
 - `ampstruct-frontend/src/components/Feature2.js` — BioJS interactive sequence viewer.
 - `ampstruct-frontend/src/components/Feature3.js` — structure prediction section.
@@ -99,6 +101,28 @@ The backend `/predict` endpoint parses and validates FASTA records, then runs lo
 - `ampstruct-backend/utils/fasta_parser.py` — FASTA parsing and validation.
 - `AGENTS.md` — durable project context and working conventions.
 - `TODO.md` — ranked UI team priorities.
+
+## Inspect and download results
+
+After an upload completes, use **Sequence to inspect** to select a record. One
+result card and one set of visualization panels are shown at a time. Selection
+uses the record's original position, so duplicate FASTA IDs remain separate.
+Invalid records can be inspected and exported; their visualization panels are
+not opened. A new upload clears previous results and resets selection.
+
+Choose **Download CSV** or **Download TSV**. CSV is convenient for spreadsheet
+applications, while TSV uses tabs as delimiters and is convenient for many
+bioinformatics workflows. Both formats use UTF-8 and quote fields containing
+the delimiter, quotes, or line breaks; use a delimited-file reader that supports
+quoted fields. Spreadsheet formula-like text cells receive an apostrophe prefix.
+
+Downloads include all records by default. **Download scope** can restrict the
+export to the selected record, retaining its original record number. Fields
+include the raw sequence, validation and prediction status, class ID, label,
+full-precision class-1 and per-class scores, model name, verification flags,
+accuracy note, warnings, and errors. Missing or unavailable predictions produce
+blank prediction fields. Scores are not exported as calibrated confidence, and
+these files do not establish model accuracy.
 
 ## Test FASTA files
 
