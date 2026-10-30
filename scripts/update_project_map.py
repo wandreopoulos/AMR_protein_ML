@@ -11,7 +11,7 @@ START = '<!-- PROJECT_MAP:START -->'
 END = '<!-- PROJECT_MAP:END -->'
 NOTES = {
     'AGENTS.md': 'project context and this generated navigation map',
-    'README.md': 'setup, local servers, and public benchmark commands',
+    'README.md': 'clone and quick-start instructions',
     'TODO.md': 'team priorities and assignments',
     'TOVERIFY.md': 'runtime verification and model accuracy limitations',
     '.githooks/': 'automatic map refresh and push checks',
@@ -36,7 +36,8 @@ NOTES = {
     'ampstruct-frontend/src/components/Feature3.js': 'structure section',
     'ampstruct-frontend/src/components/Structure2D.js': 'current secondary-structure demo',
     'ampstruct-frontend/src/components/Structure3D.js': 'current fixed-PDB demo viewer',
-    'docs/': 'optional local documentation; ignored by Git',
+    'docs/': 'project documentation and optional local assets',
+    'docs/README.md': 'detailed setup, testing, and collaboration documentation',
     'docs/AMRNONAMR.ipynb': 'supplied LightGBM training notebook',
     'source/': 'local assets; only two supplied fixtures are versioned',
     'source/provided/': 'supplied sequences, scripts, and model weights',

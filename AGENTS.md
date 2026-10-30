@@ -188,10 +188,11 @@ AMPstruct/
 │   ├── .gitignore
 │   ├── package.json
 │   └── README.md
-├── docs/  # optional local documentation; ignored by Git
+├── docs/  # project documentation and optional local assets
 │   ├── AMRNONAMR.ipynb  # supplied LightGBM training notebook
 │   ├── Krushna Thakkar web UI updates - API for finetuning w features - API for viz.md
-│   └── Krushna Thakkar web UI updates - API for finetuning w features - API for viz.zip
+│   ├── Krushna Thakkar web UI updates - API for finetuning w features - API for viz.zip
+│   └── README.md  # detailed setup, testing, and collaboration documentation
 ├── scripts/  # repository maintenance tools
 │   ├── check_python_version.py
 │   ├── install_git_hooks.py
@@ -226,7 +227,7 @@ AMPstruct/
 ├── .gitignore
 ├── AGENTS.md  # project context and this generated navigation map
 ├── environment.yml
-├── README.md  # setup, local servers, and public benchmark commands
+├── README.md  # clone and quick-start instructions
 ├── requirements.txt
 ├── TODO.md  # team priorities and assignments
 └── TOVERIFY.md  # runtime verification and model accuracy limitations

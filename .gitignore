@@ -14,6 +14,9 @@ source/provided/*
 !source/provided/testinf_file_amr.fasta
 !source/provided/testing_file_non_amr.fasta
 docs/
+!docs/
+docs/*
+!docs/README.md
 *.pt
 *.pkl
 *.h5
