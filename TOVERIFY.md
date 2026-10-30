@@ -108,6 +108,31 @@ ampstruct-backend\.venv310\Scripts\Activate.ps1
 Run this command in a fresh process (both shells):
 
 ```text
-python -c "import sys; sys.path.insert(0, 'ampstruct-backend'); from app import classify_sequence; from utils.fasta_parser import parse_fasta; print([(name, classify_sequence(parse_fasta('source/' + name)[0]['sequence'])) for name in ['testinf_file_amr.fasta', 'testing_file_non_amr.fasta']])"
+python -c "import sys; sys.path.insert(0, 'ampstruct-backend'); from app import classify_sequence; from utils.fasta_parser import parse_fasta; print([(name, classify_sequence(parse_fasta('source/provided/' + name)[0]['sequence'])) for name in ['testinf_file_amr.fasta', 'testing_file_non_amr.fasta']])"
 ```
 
+
+## Public reference follow-up — October 29, 2026
+
+Supplied assets and weights moved to `source/provided/`; public downloads are
+under `source/public/`. Backend defaults and reproduction paths were updated.
+The classifier checksum is unchanged. Two existing versioned FASTA fixtures
+were relocated, while weights and newly downloaded data remain ignored by Git.
+
+The public panel contains 10 reviewed UniProt AMR references and 10 presumed
+non-AMR E. coli metabolic controls, retrieved through the official EMBL-EBI
+Proteins API. Each raw annotation and complete canonical sequence is retained,
+with source URLs, label criteria, versions, and SHA-256 in the manifest.
+
+The experimental model agreed with 18/20 panel labels: 10/10 AMR references
+returned class 1 and 8/10 presumed controls returned class 0. P00509 (aspartate
+aminotransferase) and P0A9G6 (isocitrate lyase) returned class 1. This is not an
+independent accuracy estimate: seven positives exactly match the supplied CARD
+FASTA, negative labels are annotation-based assumptions, and training/homology
+overlap is unknown. The mapping and model were not tuned on this panel.
+
+Reproduce downloads with `python ampstruct-backend/download_public_references.py`
+and inference with `python ampstruct-backend/benchmark_public.py` from the root.
+See `source/public/README.md`, `manifest.csv`, `benchmark_results.csv`, and
+`benchmark_summary.json`. Restart the backend after the relocation, and update
+any custom model-path environment variables that still use the old paths.

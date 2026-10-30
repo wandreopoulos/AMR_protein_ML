@@ -33,7 +33,7 @@ The downloaded notebook is `docs/AMRNONAMR.ipynb`. Its actual pipeline is:
 Important integration facts:
 
 - The notebook’s trained model is LightGBM (`amr_lightgbm_model.pkl`), while the downloaded archive contains `model/amr_pipeline_xgb.pkl`. Do not assume these are interchangeable; identify the authoritative artifact before implementing inference.
-- The notebook loads ESM-2 through the fair-esm package, which can download/load the 650M model. The local weights are now present at `source/model/esm2_t33_650M_UR50D.pt` (approximately 2.6 GB). The extracted `esm_embedding.py` expects a model path relative to its own location, so verify that path before running it.
+- The notebook loads ESM-2 through the fair-esm package, which can download/load the 650M model. The local weights are now present at `source/provided/model/esm2_t33_650M_UR50D.pt` (approximately 2.6 GB). The extracted `esm_embedding.py` expects a model path relative to its own location, so verify that path before running it.
 - The notebook’s top feature-importance plot labels features as embedding dimensions (`F0`, `F1`, etc.). Those are not directly human-readable biological features, so a UI explanation layer will need a separate attribution strategy if it is meant to explain hydrophobicity, polarity, residues, or domains.
 - The notebook includes duplicate precision-recall plotting cells; treat this as exploratory notebook history rather than a production API contract.
 
@@ -121,30 +121,123 @@ Upload FASTA
 - Preserve raw FASTA text and provide copy/download actions.
 - Use responsive layouts; the current screenshots are desktop-width and do not establish mobile behavior.
 
-## Technical/product assumptions to verify in code
+## Current project map
 
-The project brief sketches a likely structure:
+This generated map follows the application files, not the brief's conceptual
+layout. `docs/` and most of `source/` are optional local assets: their documented
+locations are shown even in fresh clones, while downloaded records, model
+contents, dependencies, build output, and runtime caches are omitted. CSS and
+test files sit beside the components they support.
 
+<!-- PROJECT_MAP:START -->
 ```text
 AMPstruct/
-├── ampstruct-frontend/     # React UI for upload, feature visualization, structure views
-│   └── components/
-│       ├── Feature1.js      # hydrophobicity/polarity highlights
-│       ├── Feature2.js      # BioJS integration / interactive sequence rendering
-│       └── Feature3.js      # planned SPIDER3 / AlphaFold structural display
-├── ampstruct-backend/      # Flask API
-│   ├── classify_amp.py      # LightGBM prediction using ESM-2 embeddings
-│   └── utils/
-│       ├── fasta_parser.py
-│       └── esm2_embedder.py
-├── data/
-│   ├── all_embeddings.npy
-│   └── all_labels.npy
-└── notebooks/
-    └── AMR_pipeline_colab.ipynb
+├── .githooks/  # automatic map refresh and push checks
+│   ├── pre-commit
+│   ├── pre-push
+│   └── run-project-map
+├── ampstruct-backend/  # Flask API and experimental inference
+│   ├── utils/
+│   │   ├── esm_embedding.py  # lazy ESM-2 loading and layer-33 mean pooling
+│   │   └── fasta_parser.py  # FASTA parsing and amino acid validation
+│   ├── app.py  # FASTA upload endpoint and classifier
+│   ├── benchmark_public.py  # run the public diagnostic panel
+│   ├── download_public_references.py  # download annotated UniProt protein references
+│   ├── Procfile
+│   └── requirements.txt
+├── ampstruct-frontend/  # React application
+│   ├── public/
+│   │   ├── index.html
+│   │   ├── manifest.json
+│   │   └── robots.txt
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Feature1.css
+│   │   │   ├── Feature1.js  # sequence property highlights
+│   │   │   ├── Feature2.css
+│   │   │   ├── Feature2.js  # BioJS sequence viewer
+│   │   │   ├── Feature3.css
+│   │   │   ├── Feature3.js  # structure section
+│   │   │   ├── FileUploader.css
+│   │   │   ├── FileUploader.js  # upload, analyzing, success, and error states
+│   │   │   ├── FileUploader.test.js
+│   │   │   ├── Header.js
+│   │   │   ├── ResultCard.css
+│   │   │   ├── ResultCard.js  # provisional predictions, scores, and accuracy warnings
+│   │   │   ├── ResultCard.test.js
+│   │   │   ├── Structure2D.css
+│   │   │   ├── Structure2D.js  # current secondary-structure demo
+│   │   │   ├── Structure3D.css
+│   │   │   ├── Structure3D.js  # current fixed-PDB demo viewer
+│   │   │   └── Widgets.js
+│   │   ├── App.css
+│   │   ├── App.js  # page composition and per-sequence panels
+│   │   ├── index.css
+│   │   └── index.js
+│   ├── .gitignore
+│   ├── package.json
+│   └── README.md
+├── docs/  # optional local documentation; ignored by Git
+│   ├── AMRNONAMR.ipynb  # supplied LightGBM training notebook
+│   ├── Krushna Thakkar web UI updates - API for finetuning w features - API for viz.md
+│   └── Krushna Thakkar web UI updates - API for finetuning w features - API for viz.zip
+├── scripts/  # repository maintenance tools
+│   ├── install_git_hooks.py
+│   ├── test_project_map.py
+│   └── update_project_map.py
+├── source/  # local assets; only two supplied fixtures are versioned
+│   ├── provided/  # supplied sequences, scripts, and model weights
+│   │   ├── model/  # local ESM-2 weights and experimental XGBoost pipeline
+│   │   │   ├── amr_pipeline_xgb.pkl
+│   │   │   └── esm2_t33_650M_UR50D.pt
+│   │   ├── esm_embedding.py  # supplied legacy helper; API code is in backend/utils
+│   │   ├── fasta_parser.py
+│   │   ├── non_amr_hbb.fasta  # nucleotide-like fixture; not a protein negative control
+│   │   ├── protein_fasta_protein_homolog_model.fasta
+│   │   ├── README.md
+│   │   ├── testinf_file_amr.fasta
+│   │   ├── testing_file_non_amr.fasta  # contains resistance protein MexB despite its filename
+│   │   └── uniprotkb_accession_Q9H1E1_2025_08_15.fasta
+│   ├── public/  # downloaded public diagnostic panel; ignored by Git
+│   │   ├── amr/  # individual AMR reference FASTA files
+│   │   ├── metadata/  # raw UniProt annotations and evidence
+│   │   ├── non_amr_controls/  # individual presumed-negative protein controls
+│   │   ├── amr.fasta
+│   │   ├── benchmark_results.csv  # per-protein experimental predictions
+│   │   ├── benchmark_summary.json  # panel agreement and limitations
+│   │   ├── combined.fasta
+│   │   ├── manifest.csv  # labels, source URLs, versions, checksums, and overlap flags
+│   │   ├── non_amr_controls.fasta
+│   │   └── README.md
+│   ├── verification/  # earlier generated runtime diagnostics; ignored by Git
+│   └── README.md
+├── .gitignore
+├── AGENTS.md  # project context and this generated navigation map
+├── README.md  # setup, local servers, and public benchmark commands
+├── requirements.txt
+├── TODO.md  # team priorities and assignments
+└── TOVERIFY.md  # runtime verification and model accuracy limitations
 ```
+<!-- PROJECT_MAP:END -->
 
-The cloned repository is now present in this workspace. Its actual implementation should be inspected directly; the tree above remains a conceptual summary from the brief.
+### Automatic maintenance
+
+- Do not edit the generated block by hand. Run `python scripts/update_project_map.py`
+  after adding, moving, or removing files.
+- Enable repository-local hooks once per checkout with
+  `python scripts/install_git_hooks.py` (macOS/Linux can use `python3`; Windows
+  can use `py -3`). Hooks are enabled in the current workspace.
+- Before each commit, the hook regenerates the map from staged paths and stages
+  only the generated block. Other unstaged edits to this file stay unstaged.
+- Before every push, the hook checks each pushed tree against its committed
+  map. If stale, it refreshes the working map and stops the push; commit the
+  correction with the relevant files and push again. It never creates or amends
+  commits during a push. `--no-verify` bypasses Git hooks; do not use it to skip
+  map maintenance.
+- The generator uses a small documented list of optional local asset locations;
+  update that list and descriptions in `scripts/update_project_map.py` when the
+  asset layout or component responsibilities change. It does not enumerate
+  private documents or model files.
 
 Relevant external references in the brief:
 
@@ -159,8 +252,9 @@ These links and paths were supplied by the team and should be treated as relevan
 - Google Doc: `https://docs.google.com/document/d/1wrelx_0m3bSHS2y07gGTDbuHAbh3Ur8phiwmmSSxpQM/edit?tab=t.0`
 - Web interface mockup/repository: `https://github.com/wandreopoulos/AMR_protein_ML/tree/krushna_thakkar_AMR_repo`
 - Google Drive dataset folder: `https://drive.google.com/drive/folders/1PIjmw0ZhhcFX0Cis-sJvN_sQAJlFzhR3`
-- Downloaded archive currently in this workspace: `source/drive-download-20261028T013335Z-1-002.zip`
-- Extracted working assets: `source/`
+- Historical supplied archive filename: `drive-download-20261028T013335Z-1-002.zip` (not present during the October 29 reorganization)
+- Supplied working assets: `source/provided/`
+- Downloaded public test panel: `source/public/` (FASTA, source metadata, manifest, benchmark outputs)
 
 The Colab notebook linked from the Google Doc used these Google Drive FASTA inputs:
 
@@ -171,7 +265,9 @@ query_path = "/content/drive/MyDrive/GeneCode/uniprotkb_accession_Q9H1E1_2025_08
 save_dir = "/content/drive/MyDrive/GeneCode/esm_embeddings"
 ```
 
-The archive has been extracted directly to `source/` and documented in `source/README.md`. It contains FASTA fixtures, `fasta_parser.py`, `esm_embedding.py`, a `Procfile`, and `model/amr_pipeline_xgb.pkl`. Preserve the original ZIP as the source artifact. Note that the extracted model appears to be XGBoost, which conflicts with the brief’s LightGBM description; verify before integrating.
+The supplied assets are organized under `source/provided/` and documented in `source/provided/README.md`. The historical ZIP filename is recorded above, but the ZIP was not present during the October 29 reorganization; no original ZIP was deleted. The supplied folder contains FASTA fixtures, `fasta_parser.py`, `esm_embedding.py`, a `Procfile`, and `model/amr_pipeline_xgb.pkl`. Preserve the original ZIP if restored. The classifier is a StandardScaler/XGBoost pipeline, distinct from the documented LightGBM model.
+
+Public pilot fixtures are downloaded with `python ampstruct-backend/download_public_references.py` and evaluated with `python ampstruct-backend/benchmark_public.py`. Raw UniProt records, FASTA files, a label/provenance manifest, and results live under ignored `source/public/`. The 10 negative examples are presumed bacterial metabolic controls, not experimentally proven absence of AMR function. Seven of the 10 AMR examples exactly match the supplied CARD FASTA, and complete training overlap is unknown. Treat this as a diagnostic panel, not an independent accuracy estimate. Keep class mapping provisional; do not reverse labels to fit these examples.
 
 ## Working rules for future interface changes
 

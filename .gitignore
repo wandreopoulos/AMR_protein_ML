@@ -8,7 +8,11 @@ model/
 uploads/
 .venv/
 .venv*/
-source/
+source/*
+!source/provided/
+source/provided/*
+!source/provided/testinf_file_amr.fasta
+!source/provided/testing_file_non_amr.fasta
 docs/
 *.pt
 *.pkl

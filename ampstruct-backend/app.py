@@ -17,7 +17,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 BASE_DIR = Path(__file__).resolve().parent.parent
 MODEL_PATH = Path(os.environ.get(
     "CLASSIFIER_MODEL_PATH",
-    BASE_DIR / "source" / "model" / "amr_pipeline_xgb.pkl",
+    BASE_DIR / "source" / "provided" / "model" / "amr_pipeline_xgb.pkl",
 ))
 
 _classifier = None

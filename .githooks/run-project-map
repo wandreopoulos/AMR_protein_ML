@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+project_root=$(git rev-parse --show-toplevel)
+for interpreter in python3 python; do
+    if command -v "$interpreter" >/dev/null 2>&1; then
+        exec "$interpreter" "$project_root/scripts/update_project_map.py" "$@"
+    fi
+done
+if command -v py >/dev/null 2>&1; then
+    exec py -3 "$project_root/scripts/update_project_map.py" "$@"
+fi
+echo "Project-map hooks require Python 3. Install Python, then retry." >&2
+exit 1

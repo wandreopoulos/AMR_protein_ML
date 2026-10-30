@@ -82,7 +82,7 @@ npm start
 
 The frontend then submits to `http://localhost:5001/predict` without changing source code.
 
-The backend `/predict` endpoint parses and validates FASTA records, then runs local ESM-2 embeddings through the downloaded StandardScaler/XGBoost pipeline for valid sequences. It requires the local weights under `source/model/` (or `ESM_MODEL_PATH` and `CLASSIFIER_MODEL_PATH`). Results are marked `experimental`: class labels provisionally follow the notebook, and scores are uncalibrated. The frontend currently renders sequence records and feature/structure panels; it does not yet display the new classification fields. See [TOVERIFY.md](TOVERIFY.md) for the tested dependency versions, native-crash diagnosis, and unresolved artifact provenance. The experiment uses one OpenMP thread and serializes inference within each API worker; restart the backend after updating.
+The backend `/predict` endpoint parses and validates FASTA records, then runs local ESM-2 embeddings through the downloaded StandardScaler/XGBoost pipeline for valid sequences. It requires the local weights under `source/provided/model/` (or `ESM_MODEL_PATH` and `CLASSIFIER_MODEL_PATH`). Results are marked `experimental`: class labels provisionally follow the notebook, and scores are uncalibrated. The frontend displays provisional predictions, class-1 scores, model metadata, accuracy warnings, and sequence feature/structure panels. See [TOVERIFY.md](TOVERIFY.md) for the tested dependency versions, native-crash diagnosis, and unresolved artifact provenance. The experiment uses one OpenMP thread and serializes inference within each API worker; restart the backend after updating.
 
 ## Where to work
 
@@ -102,13 +102,54 @@ The backend `/predict` endpoint parses and validates FASTA records, then runs lo
 
 ## Test FASTA files
 
-The local test assets are in the ignored `source/` folder, so they are not included in a fresh Git clone. If you have the workspace asset bundle, useful files include:
+Two small supplied test fixtures are versioned under `source/provided/`. Other supplied assets and model weights are ignored by Git and require the workspace asset bundle. Useful files include:
 
-- `source/uniprotkb_accession_Q9H1E1_2025_08_15.fasta` — sequence shown in the original mockup.
-- `source/testinf_file_amr.fasta` — AMR test sequence.
-- `source/testing_file_non_amr.fasta` — non-AMR test sequence.
+- `source/provided/uniprotkb_accession_Q9H1E1_2025_08_15.fasta` — sequence shown in the original mockup.
+- `source/provided/testinf_file_amr.fasta` — AMR test sequence.
+- `source/provided/testing_file_non_amr.fasta` — supplied fixture whose header identifies resistance protein MexB; its filename is not a trustworthy non-AMR label.
+
+## Public pilot test panel
+
+Downloaded protein references are separate from the supplied assets:
+
+- `source/public/amr.fasta` — public AMR references.
+- `source/public/non_amr_controls.fasta` — presumed non-AMR bacterial metabolic controls.
+- `source/public/combined.fasta` — both groups for a multi-sequence upload.
+- `source/public/manifest.csv` — source URLs, annotation-based labels, sequence checksums, and exact matches against the supplied CARD file.
+- `source/public/README.md` — selection criteria and limitations.
+
+These files are ignored by Git alongside the model weights. The small panel is for diagnostic testing; annotation-based negative controls and unknown training overlap prevent an independent accuracy claim.
+
+With the backend environment activated, run from the repository root on macOS/Linux or Windows:
+
+```text
+python ampstruct-backend/download_public_references.py
+python ampstruct-backend/benchmark_public.py
+```
+
+Results are written to `source/public/benchmark_results.csv` and `source/public/benchmark_summary.json`. The class mapping remains provisional; the script does not tune the mapping or classifier to these examples. Restart the backend after the asset reorganization. Update any custom `ESM_MODEL_PATH` or `CLASSIFIER_MODEL_PATH` values that still point to `source/model/`.
 
 ## Collaboration workflow
+
+Enable automatic maintenance of the project map in `AGENTS.md` once per clone:
+
+```bash
+python3 scripts/install_git_hooks.py
+```
+
+On Windows PowerShell:
+
+```powershell
+py -3 scripts/install_git_hooks.py
+```
+
+The hooks refresh and stage only the generated map before commits. Every push
+checks the committed map against the pushed files. A stale map is refreshed
+locally and the push stops until the correction is committed; hooks do not
+create or amend commits during a push. To refresh manually, run
+`python scripts/update_project_map.py` using your Python 3 interpreter.
+Dependencies, caches, and downloaded record listings are omitted; optional
+local documentation and asset locations remain visible for navigation.
 
 Before editing:
 

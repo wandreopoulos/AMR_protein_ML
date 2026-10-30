@@ -19,8 +19,8 @@ _batch_converter = None
 
 
 def _default_model_path() -> Path:
-    # The local weights live in source/model, beside the backend folder.
-    return Path(__file__).resolve().parents[2] / "source" / "model" / "esm2_t33_650M_UR50D.pt"
+    # Supplied weights are kept separate from downloaded public test fixtures.
+    return Path(__file__).resolve().parents[2] / "source" / "provided" / "model" / "esm2_t33_650M_UR50D.pt"
 
 
 def _load_model():
