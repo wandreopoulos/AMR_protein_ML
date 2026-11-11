@@ -7,6 +7,7 @@ import ResultsToolbar from "./components/ResultsToolbar";
 import Feature1 from "./components/Feature1";
 import Feature2 from "./components/Feature2";
 import Feature3 from "./components/Feature3";
+import EmbeddingMap from "./components/EmbeddingMap";
 function App() {
   const [results, setResults] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -24,6 +25,7 @@ function App() {
       {Array.isArray(results) && results.length > 0 && (
         <>
           <ResultsToolbar results={results} selectedIndex={selectedIndex} onSelect={setSelectedIndex} />
+          <EmbeddingMap sequences={results} selectedIndex={selectedIndex} />
           {selected && (
             <>
               <ResultCard item={selected} />
