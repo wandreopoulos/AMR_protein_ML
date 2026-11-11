@@ -10,6 +10,10 @@ from threading import Lock
 from utils.fasta_parser import parse_fasta
 # Initialize the single-thread OpenMP setting before importing the classifier.
 from utils.esm_embedding import get_esm_embedding
+from utils.proteocraft import design as run_proteocraft_design
+from utils.proteocraft import status as proteocraft_status
+from utils.esmfold import fold_sequence, status as esmfold_status
+from utils.embedding_map import build_embedding_map
 import joblib
 
 app = Flask(__name__)
@@ -125,6 +129,49 @@ def predict():
     except Exception as e:
         print(f"❌ Error during FASTA parsing: {str(e)}")
         return jsonify({"error": str(e)}), 500
+
+
+@app.route("/proteocraft/status", methods=["GET"])
+def proteocraft_status_route():
+    return jsonify(proteocraft_status())
+
+
+@app.route("/proteocraft/design", methods=["POST"])
+def proteocraft_design_route():
+    payload = request.get_json(silent=True) or {}
+    try:
+        result = run_proteocraft_design(
+            target=payload.get("target", ""),
+            binder_length=payload.get("binder_length"),
+            device=payload.get("device", "cuda:0"),
+            output_dir=payload.get("output_dir"),
+        )
+        return jsonify(result)
+    except (RuntimeError, ValueError, TypeError) as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@app.route("/esmfold/status", methods=["GET"])
+def esmfold_status_route():
+    return jsonify(esmfold_status())
+
+
+@app.route("/esmfold/fold", methods=["POST"])
+def esmfold_fold_route():
+    payload = request.get_json(silent=True) or {}
+    try:
+        return jsonify(fold_sequence(payload.get("sequence", "")))
+    except (RuntimeError, ValueError, TypeError) as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@app.route("/embedding-map", methods=["POST"])
+def embedding_map_route():
+    payload = request.get_json(silent=True) or {}
+    try:
+        return jsonify(build_embedding_map(payload.get("sequences", [])))
+    except (RuntimeError, ValueError, TypeError) as exc:
+        return jsonify({"error": str(exc)}), 400
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)

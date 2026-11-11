@@ -139,8 +139,11 @@ AMPstruct/
 │   └── run-project-map
 ├── ampstruct-backend/  # Flask API and experimental inference
 │   ├── utils/
+│   │   ├── embedding_map.py
 │   │   ├── esm_embedding.py  # lazy ESM-2 loading and layer-33 mean pooling
+│   │   ├── esmfold.py
 │   │   ├── fasta_parser.py  # FASTA parsing and amino acid validation
+│   │   ├── proteocraft.py
 │   │   └── python_version.py
 │   ├── app.py  # FASTA upload endpoint and classifier
 │   ├── benchmark_public.py  # run the public diagnostic panel
@@ -154,6 +157,8 @@ AMPstruct/
 │   │   └── robots.txt
 │   ├── src/
 │   │   ├── components/
+│   │   │   ├── EmbeddingMap.css
+│   │   │   ├── EmbeddingMap.js
 │   │   │   ├── Feature1.css
 │   │   │   ├── Feature1.js  # sequence property highlights
 │   │   │   ├── Feature2.css

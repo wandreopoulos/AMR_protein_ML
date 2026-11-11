@@ -1,15 +1,60 @@
 .feature3-container {
-  padding: 30px;
-  background-color: #f8f9ff;
-  border-radius: 8px;
+  background: #f8faff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-sizing: border-box;
   margin: 40px auto;
-  width: 90%;
+  max-width: 1200px;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  width: min(94%, 1200px);
+}
+
+.feature3-container h2 {
+  color: #172b4d;
+  font-size: clamp(1.25rem, 2.2vw, 1.7rem);
+  margin-top: 0;
 }
 
 .feature3-desc {
   font-style: italic;
   color: #555;
   margin-bottom: 20px;
+  max-width: 880px;
+  line-height: 1.55;
+}
+
+.feature3-container > button {
+  background: #1d4ed8;
+  border: 0;
+  border-radius: 7px;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 0.92rem;
+  font-weight: 700;
+  padding: 0.7rem 1rem;
+}
+
+.feature3-container > button:hover,
+.feature3-container > button:focus-visible {
+  background: #1e40af;
+  outline: 3px solid rgba(59, 130, 246, 0.25);
+  outline-offset: 2px;
+}
+
+.feature3-container > button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.feature3-error {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 8px;
+  color: #9a3412;
+  line-height: 1.45;
+  margin: 1rem 0 0;
+  max-width: 760px;
+  padding: 0.75rem 0.9rem;
 }
 
 .feature3-structure-blocks {

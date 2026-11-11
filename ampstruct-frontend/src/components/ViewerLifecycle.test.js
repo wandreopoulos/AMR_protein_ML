@@ -68,7 +68,7 @@ test('disposes the 3D stage when selection removes the viewer', async () => {
     this.loadFile = jest.fn().mockResolvedValue({});
     this.dispose = dispose;
   }) };
-  const view = render(<Structure3D />);
+  const view = render(<Structure3D pdbData="ATOM\nEND\n" />);
   await act(async () => {});
   expect(window.NGL.Stage.mock.calls[0][0]).toBeInstanceOf(HTMLElement);
   expect(screen.queryByText('Loading 3D viewer…')).not.toBeInTheDocument();
@@ -78,7 +78,7 @@ test('disposes the 3D stage when selection removes the viewer', async () => {
 
 test('reports a missing 3D provider and ignores late script callbacks after unmount', () => {
   delete window.NGL;
-  const view = render(<Structure3D />);
+  const view = render(<Structure3D pdbData="ATOM\nEND\n" />);
   const script = document.querySelector('script[src*="ngl@"]');
   const callback = script.onload;
   fireEvent.error(script);

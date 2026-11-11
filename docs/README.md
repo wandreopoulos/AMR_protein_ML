@@ -115,6 +115,19 @@ The frontend then submits to `http://localhost:5001/predict` without changing so
 
 The backend `/predict` endpoint parses and validates FASTA records, then runs local ESM-2 embeddings through the downloaded StandardScaler/XGBoost pipeline for valid sequences. It requires the local weights under `source/provided/model/` (or `ESM_MODEL_PATH` and `CLASSIFIER_MODEL_PATH`). Results are marked `experimental`: class labels provisionally follow the notebook, and scores are uncalibrated. The frontend displays provisional predictions, class-1 scores, model metadata, accuracy warnings, and sequence feature/structure panels. See [TOVERIFY.md](../TOVERIFY.md) for the tested dependency versions, native-crash diagnosis, and unresolved artifact provenance. The experiment uses one OpenMP thread and serializes inference within each API worker; restart the backend after updating.
 
+### ESMFold structure prediction
+
+The structure panel now starts empty and offers an explicit **Predict with ESMFold** action. `POST /esmfold/fold` sends the selected valid protein sequence to the documented ESM Metagenomic Atlas ESMFold API and returns a sequence-specific PDB structure for the NGL viewer. The current public API rejects sequences longer than 400 residues; longer sequences are rejected before they leave the backend rather than silently truncated. This is separate from AMP/AMR classification. The request sends the sequence to an external research API; use a local ESMFold deployment instead by changing `ESMFOLD_API_URL` if sequence privacy or longer sequences require it. `GET /esmfold/status` reports the configured remote mode. The official local implementation requires the ESMFold extras/OpenFold and CUDA.
+
+### ProteoCraft integration
+
+ProteoCraft is integrated as an optional binder-design workflow, not as a replacement for `/predict`. Its official repository designs binders against target proteins using ESMFold2 verification; it does not classify AMP/AMR status. The backend exposes:
+
+- `GET /proteocraft/status` — reports CLI availability and the required Linux/CUDA environment.
+- `POST /proteocraft/design` — accepts `{ "target": "...", "binder_length": 80, "device": "cuda:0" }` and runs the official `proteocraft` CLI when installed.
+
+The official ProteoCraft setup requires Linux x86-64, Python 3.12, an NVIDIA CUDA GPU, and approximately 25.6 GB for model downloads. Therefore the macOS development environment can validate the integration contract but cannot run the real design workflow locally. Set `PROTEOCRAFT_BIN`, `PROTEOCRAFT_ROOT`, and optionally `PROTEOCRAFT_TIMEOUT_SECONDS` when running the separate official environment. Do not present ProteoCraft results as AMP/AMR predictions.
+
 ## Where to work
 
 - `ampstruct-frontend/src/App.js` — page composition and result flow.
