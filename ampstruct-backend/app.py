@@ -14,6 +14,7 @@ from utils.proteocraft import design as run_proteocraft_design
 from utils.proteocraft import status as proteocraft_status
 from utils.esmfold import fold_sequence, status as esmfold_status
 from utils.embedding_map import build_embedding_map
+from utils.analysis_context import create_context, load_context, to_toon
 import joblib
 
 app = Flask(__name__)
@@ -124,7 +125,8 @@ def predict():
             prediction = classify_sequence(result["sequence"])
             result.update(prediction)
 
-        return jsonify({"results": sequences})
+        context = create_context(sequences)
+        return jsonify({"analysis_id": context["analysis_id"], "results": sequences})
 
     except Exception as e:
         print(f"❌ Error during FASTA parsing: {str(e)}")
@@ -172,6 +174,17 @@ def embedding_map_route():
         return jsonify(build_embedding_map(payload.get("sequences", [])))
     except (RuntimeError, ValueError, TypeError) as exc:
         return jsonify({"error": str(exc)}), 400
+
+
+@app.route("/analysis/<analysis_id>/context", methods=["GET"])
+def analysis_context_route(analysis_id):
+    try:
+        context = load_context(analysis_id)
+        if request.args.get("format", "json").lower() == "toon":
+            return app.response_class(to_toon(context), mimetype="text/plain")
+        return jsonify(context)
+    except (FileNotFoundError, ValueError) as exc:
+        return jsonify({"error": str(exc)}), 404
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)

@@ -115,9 +115,17 @@ The frontend then submits to `http://localhost:5001/predict` without changing so
 
 The backend `/predict` endpoint parses and validates FASTA records, then runs local ESM-2 embeddings through the downloaded StandardScaler/XGBoost pipeline for valid sequences. It requires the local weights under `source/provided/model/` (or `ESM_MODEL_PATH` and `CLASSIFIER_MODEL_PATH`). Results are marked `experimental`: class labels provisionally follow the notebook, and scores are uncalibrated. The frontend displays provisional predictions, class-1 scores, model metadata, accuracy warnings, and sequence feature/structure panels. See [TOVERIFY.md](../TOVERIFY.md) for the tested dependency versions, native-crash diagnosis, and unresolved artifact provenance. The experiment uses one OpenMP thread and serializes inference within each API worker; restart the backend after updating.
 
+### Analysis-based chatbot context
+
+Each successful `/predict` request now creates an `analysis_id` and stores the complete structured result context as backend JSON under the ignored `runtime/analysis_context/` directory. Retrieve it with `GET /analysis/<analysis_id>/context`. Add `?format=toon` to receive a deterministic compact TOON representation for a future AI chat provider. No AI provider is called yet; JSON remains the source of truth and TOON is only a prompt serialization layer.
+
 ### ESMFold structure prediction
 
 The structure panel now starts empty and offers an explicit **Predict with ESMFold** action. `POST /esmfold/fold` sends the selected valid protein sequence to the documented ESM Metagenomic Atlas ESMFold API and returns a sequence-specific PDB structure for the NGL viewer. The current public API rejects sequences longer than 400 residues; longer sequences are rejected before they leave the backend rather than silently truncated. This is separate from AMP/AMR classification. The request sends the sequence to an external research API; use a local ESMFold deployment instead by changing `ESMFOLD_API_URL` if sequence privacy or longer sequences require it. `GET /esmfold/status` reports the configured remote mode. The official local implementation requires the ESMFold extras/OpenFold and CUDA.
+
+### ESM-2 embedding map
+
+The optional **ESM-2 Embedding Map** appears after upload and runs only when the user clicks **Build map**. It requires at least two valid sequences, generates ESM-2 embeddings, and reduces them to two dimensions with t-SNE (`random_state=42`). Points are colored by the provisional classifier label and the selected sequence is highlighted. This is an exploratory similarity visualization, not a 3D structure prediction or a graph neural network.
 
 ### ProteoCraft integration
 

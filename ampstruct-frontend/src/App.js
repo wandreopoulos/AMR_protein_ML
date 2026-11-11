@@ -10,15 +10,17 @@ import Feature3 from "./components/Feature3";
 import EmbeddingMap from "./components/EmbeddingMap";
 function App() {
   const [results, setResults] = useState([]);
+  const [analysisId, setAnalysisId] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const selected = results[selectedIndex];
-  const handleResults = nextResults => {
+  const handleResults = (nextResults, nextAnalysisId = null) => {
     setResults(nextResults);
+    setAnalysisId(nextAnalysisId);
     setSelectedIndex(0);
   };
 
   return (
-    <div className="App" style={{ fontFamily: "Arial, sans-serif" }}>
+    <div className="App" data-analysis-id={analysisId || undefined} style={{ fontFamily: "Arial, sans-serif" }}>
       <Header />
       <FileUploader onFileUpload={handleResults} />
 

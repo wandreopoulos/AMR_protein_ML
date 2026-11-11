@@ -57,7 +57,8 @@ const FileUploader = ({ onFileUpload }) => {
 
       const validCount = data.results.filter(result => result.valid).length;
       const invalidCount = data.results.length - validCount;
-      onFileUpload(data.results);
+      if (data.analysis_id) onFileUpload(data.results, data.analysis_id);
+      else onFileUpload(data.results);
       if (validCount === 0) {
         setStatus('error');
         setMessage('No valid protein sequences were found. Check the amino acid letters in your FASTA file.');

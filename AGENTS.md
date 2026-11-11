@@ -139,6 +139,7 @@ AMPstruct/
 │   └── run-project-map
 ├── ampstruct-backend/  # Flask API and experimental inference
 │   ├── utils/
+│   │   ├── analysis_context.py
 │   │   ├── embedding_map.py
 │   │   ├── esm_embedding.py  # lazy ESM-2 loading and layer-33 mean pooling
 │   │   ├── esmfold.py
